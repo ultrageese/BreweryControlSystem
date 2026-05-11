@@ -1,3 +1,4 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 fn main() -> eframe::Result{
 
     let native_opts = eframe::NativeOptions {
@@ -8,4 +9,4 @@ fn main() -> eframe::Result{
     };
     eframe::run_native("BCS", native_opts, Box::new(|cc| Ok(Box::new(code::App::new(cc)))),)
  
-    } //Код не работает, ошибка пока и должна быть.
+    } 

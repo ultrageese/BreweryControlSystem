@@ -1,15 +1,61 @@
+use egui_dock::{DockArea, Style};
+
+static TABS_CAN_BE_WINDOWS: bool = false;
+
+enum TabTypes{
+    Equipment,
+    Worker,
+    Position,
+    Salary,
+    Material,
+    Recipe,
+    Product,
+    Order,
+    Settings
+}
+struct Tab{
+    tab_type: TabTypes,
+    title: String,
+    content: String,
+}
+
 pub struct App{
-    label: String,
+    tree: egui_dock::DockState<Tab>,
 }
 
 impl Default for App{
     fn default() -> Self{
-        Self {
-            label: "Добро пожаловать в СУП: Систему Управления Пивоварней!".to_owned()
-        }
+        let mut tree = egui_dock::DockState::new(vec![
+            Tab{
+                tab_type: TabTypes::Equipment,
+                title:"Оборудование".to_owned(),
+                content:"Вкладка с оборудованием".to_owned()
+            },
+            Tab{
+                tab_type: TabTypes::Material,
+                title: "Сырьё".to_owned(),
+                content:"Вкладка с сырьём".to_owned()
+            },
+            Tab{
+                tab_type: TabTypes::Worker,
+                title: "Сотрудники".to_owned(),
+                content:"Сотрудники".to_owned()
+            }
+        ]);
+
+        // let [a,b] = 
+        //     tree.main_surface_mut()
+        //     .split_left(egui_dock::NodeIndex::root(), 0.3, vec!["tab3".to_owned()]);
+
+        // let [_,_] = tree
+        //     .main_surface_mut()
+        //     .split_below(a, 0.7, vec!["tab4".to_owned()]);
+        // let [_,_] = tree
+        //     .main_surface_mut()
+        //     .split_below(b, 0.5, vec!["tab5".to_owned()]);
+        Self{tree}
     }
 }
-
 impl App{
     pub fn new(_cc: &eframe::CreationContext<'_>) -> Self{
         Default::default()
@@ -19,18 +65,36 @@ impl App{
 
 impl eframe::App for App{
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame){
+        DockArea::new(&mut self.tree)
+            .style(Style::from_egui(ui.style().as_ref()))
+            .show_inside(ui, &mut TabViewer {});
+    }
+}
 
-        egui::Panel::top("top_panel").show_inside(ui, |ui| {
-            egui::MenuBar::new().ui(ui, |ui| {
-                egui::widgets::global_theme_preference_buttons(ui);
-            });
-        });
-        egui::CentralPanel::default().show_inside(ui, |ui|{
-            ui.heading("Система Управления Пивоварней");
-            ui.horizontal(|ui|{
-                ui.label("write something: ");
-                ui.text_edit_singleline(&mut self.label);
-            });
-        });
+struct TabViewer {}
+
+impl egui_dock::TabViewer for TabViewer{
+    type Tab = Tab;
+
+    fn title(&mut self, tab: &mut Self::Tab) -> egui::WidgetText{
+        (&*tab.title).into()
+    }
+    fn ui(&mut self, ui: &mut egui::Ui, tab: &mut Self::Tab){
+        ui.label(&tab.content);
+        match &tab.tab_type{
+            TabTypes::Equipment => {
+                ui.label("This is Equipment");
+            },
+            _ =>{
+                ui.label("This is not");
+            }
+        } 
+        
+    }
+    fn allowed_in_windows(&self, _tab: &mut Self::Tab) -> bool {
+        TABS_CAN_BE_WINDOWS
+    }
+    fn is_closeable(&self, _tab: &Self::Tab) -> bool {
+        false
     }
 }
