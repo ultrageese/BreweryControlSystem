@@ -1,1 +1,1 @@
-"# BreweryControlSystem" 
+# Система управления пивоварней
