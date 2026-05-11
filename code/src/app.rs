@@ -5,7 +5,7 @@ pub struct App{
 impl Default for App{
     fn default() -> Self{
         Self {
-            label: "This is BCS: Brewery Control System".to_owned()
+            label: "Добро пожаловать в СУП: Систему Управления Пивоварней!".to_owned()
         }
     }
 }
@@ -26,7 +26,7 @@ impl eframe::App for App{
             });
         });
         egui::CentralPanel::default().show_inside(ui, |ui|{
-            ui.heading("BCS");
+            ui.heading("Система Управления Пивоварней");
             ui.horizontal(|ui|{
                 ui.label("write something: ");
                 ui.text_edit_singleline(&mut self.label);
