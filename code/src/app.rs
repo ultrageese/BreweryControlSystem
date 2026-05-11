@@ -16,7 +16,6 @@ enum TabTypes{
 struct Tab{
     tab_type: TabTypes,
     title: String,
-    content: String,
 }
 
 pub struct App{
@@ -29,17 +28,14 @@ impl Default for App{
             Tab{
                 tab_type: TabTypes::Equipment,
                 title:"Оборудование".to_owned(),
-                content:"Вкладка с оборудованием".to_owned()
             },
             Tab{
                 tab_type: TabTypes::Material,
                 title: "Сырьё".to_owned(),
-                content:"Вкладка с сырьём".to_owned()
             },
             Tab{
                 tab_type: TabTypes::Worker,
                 title: "Сотрудники".to_owned(),
-                content:"Сотрудники".to_owned()
             }
         ]);
 
@@ -61,6 +57,7 @@ impl App{
         Default::default()
     }
     
+    
 }
 
 impl eframe::App for App{
@@ -72,6 +69,11 @@ impl eframe::App for App{
 }
 
 struct TabViewer {}
+impl TabViewer{
+    fn show_equipment(&mut self, ui: &mut egui::Ui){
+        ui.label("Equipment");
+    }
+}
 
 impl egui_dock::TabViewer for TabViewer{
     type Tab = Tab;
@@ -80,10 +82,9 @@ impl egui_dock::TabViewer for TabViewer{
         (&*tab.title).into()
     }
     fn ui(&mut self, ui: &mut egui::Ui, tab: &mut Self::Tab){
-        ui.label(&tab.content);
         match &tab.tab_type{
             TabTypes::Equipment => {
-                ui.label("This is Equipment");
+                &self.show_equipment(ui);
             },
             _ =>{
                 ui.label("This is not");
