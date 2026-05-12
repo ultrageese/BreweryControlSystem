@@ -1,4 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+mod app;
+mod models;
 fn main() -> eframe::Result{
 
     let native_opts = eframe::NativeOptions {
@@ -7,6 +9,6 @@ fn main() -> eframe::Result{
             .with_min_inner_size([300.0,200.0]),
             ..Default::default()
     };
-    eframe::run_native("BCS", native_opts, Box::new(|cc| Ok(Box::new(code::App::new(cc)))),)
+    eframe::run_native("BCS", native_opts, Box::new(|cc| Ok(Box::new(app::App::new(cc)))),)
  
     } 

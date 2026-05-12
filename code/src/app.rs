@@ -38,17 +38,6 @@ impl Default for App{
                 title: "Сотрудники".to_owned(),
             }
         ]);
-
-        // let [a,b] = 
-        //     tree.main_surface_mut()
-        //     .split_left(egui_dock::NodeIndex::root(), 0.3, vec!["tab3".to_owned()]);
-
-        // let [_,_] = tree
-        //     .main_surface_mut()
-        //     .split_below(a, 0.7, vec!["tab4".to_owned()]);
-        // let [_,_] = tree
-        //     .main_surface_mut()
-        //     .split_below(b, 0.5, vec!["tab5".to_owned()]);
         Self{tree}
     }
 }
@@ -64,18 +53,27 @@ impl eframe::App for App{
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame){
         DockArea::new(&mut self.tree)
             .style(Style::from_egui(ui.style().as_ref()))
-            .show_inside(ui, &mut TabViewer {});
+            .show_inside(ui, &mut MainTabViewer {});
     }
 }
 
-struct TabViewer {}
-impl TabViewer{
+struct MainTabViewer {}
+impl MainTabViewer{
     fn show_equipment(&mut self, ui: &mut egui::Ui){
         ui.label("Equipment");
     }
+    fn show_worker(&mut self, ui: &mut egui::Ui){
+        ui.label("Worker");
+    }
+    fn show_salary(&mut self, ui: &mut egui::Ui){
+        ui.label("Salary");
+    }
+    fn show_material(&mut self, ui: &mut egui::Ui){
+        ui.label("Сырьё короче да");
+    }
 }
 
-impl egui_dock::TabViewer for TabViewer{
+impl egui_dock::TabViewer for MainTabViewer{
     type Tab = Tab;
 
     fn title(&mut self, tab: &mut Self::Tab) -> egui::WidgetText{
@@ -86,6 +84,15 @@ impl egui_dock::TabViewer for TabViewer{
             TabTypes::Equipment => {
                 &self.show_equipment(ui);
             },
+            TabTypes::Worker => {
+                &self.show_worker(ui);
+            },
+            TabTypes::Salary => {
+                &self.show_salary(ui);
+            },
+            TabTypes::Material => {
+                &self.show_material(ui);
+            }
             _ =>{
                 ui.label("This is not");
             }
